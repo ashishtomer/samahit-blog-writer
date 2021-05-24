@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<title>Writer</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
+	<link rel="stylesheet" type="text/css" href="./custom.css">
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+  <div class="left-column">
+		<span class="book-name">Spark 3</span>
+		<div class="book-name-separater"></div>
+		<ul class="chapters">
+
+		</ul>
+		<div class="chapter-adder">
+			<input type="text" id="chapter-to-add">
+			<span id="add-chapter"><input type="button" class="add-chapter" value="Add Chapter"/></span>
+		</div>
+  </div>
+	<div class="right-column">
+		<div class="top-border-mask"></div>
+		<div class="writer">
+			<div id="page-title">
+				<input id="input-box-page-title" type="text" name="page-title" placeholder="Page Title">
+			</div>
+			<div id="standalone-container">
+				<div id="editor-container"></div>
+			</div>
+		</div>
+	</div>
+
+
+
+  <script type="text/javascript" src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+	<script type="text/javascript">
+		var quill = new Quill('#editor-container', {
+			modules: {
+				syntax: true,
+				toolbar: [
+					[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+					['blockquote', 'code-block'],
+					['bold', 'italic', 'underline', 'strike'],
+					['link', 'image', 'video', 'formula'],
+					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+					[{ 'align': [] }],
+					[{ 'script': 'sub'}, { 'script': 'super' }],
+					[{ 'indent': '-1'}, { 'indent': '+1' }],
+					[{ 'direction': 'rtl' }],
+					[{ 'color': [] }, { 'background': [] }],
+					[{ 'font': [] }],
+					['clean']
+				]
+			},
+			placeholder: 'Start writing...',
+			theme: 'snow'
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(function(){
+			/** Animate the background color */
+			var degree = 150;
+			setInterval(function() {
+				degree += 1;
+				$("li.open-chapter").css("background-image", "linear-gradient(" + degree + "deg, #751aff, #ff6699)")
+			}, 50);
+
+			/** Handle click on chapter name */
+			var openChapter, openChapterName, openChapterContent, openChapterIdentifier;
+			$(document).on('click', 'ul.chapters > li', function(event) {
+				event.stopPropagation();
+				event.preventDefault();
+				displayChapter($(this));
+			});
+
+			var isChapterDisplayed = function(chapter) {
+				var thisIdentifier = chapter.attr("chapter-identifier")
+
+				if(thisIdentifier == undefined) {
+					thisIdentifier = Math.random() * 1000000;
+					chapter.attr("chapter-identifier", thisIdentifier);
+				}
+
+				return thisIdentifier == openChapterIdentifier;
+			}
+
+			function displayChapter(chapter) {
+				var thisIdentifier = chapter.attr("chapter-identifier")
+
+				if(thisIdentifier == undefined) {
+					thisIdentifier = Math.random() * 1000000;
+					chapter.attr("chapter-identifier", thisIdentifier);
+				}
+
+				if(openChapter != undefined) {
+					openChapterContent.hide(300);
+					openChapter.removeClass("open-chapter");
+					openChapterName.removeClass("open-chapter");
+					openChapter.css("background-image", "");
+					openChapter.find("ul li input").hide(200);
+				}
+
+				if(thisIdentifier != openChapterIdentifier) {
+					degree = 150;
+					openChapter = chapter
+					openChapterName = openChapter.find("span.chapter-name");
+					openChapterContent = openChapter.find("ul");
+
+					openChapter.toggleClass("open-chapter");
+					openChapterName.toggleClass("open-chapter");
+					openChapterContent.show(300);
+
+					openChapterIdentifier = thisIdentifier;
+				} else {
+					openChapterIdentifier = undefined;
+				}
+			}
+
+			/** Handle hover on chapter name */
+			$(document).on('mouseenter', 'ul.chapters > li', function(event) {
+				$(this).find("span.add-content").show(200);
+			});
+
+			$(document).on('mouseleave', 'ul.chapters > li', function(event) {
+				$(this).find("span.add-content").hide(200);
+			});
+
+			/** Add new content to a chapter */
+			function addChapterInput(listItem) {
+				listItem.find("ul").append('<li><input type="text"> <input type="button" class="add-page" value="Add Page"></li>');
+			}
+
+			$(document).on('click', 'ul.chapters > li > span.add-content', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				var chapter = $(this).parent();
+				if(!isChapterDisplayed(chapter)) displayChapter(chapter);
+
+				var inputBox = chapter.find("ul li input");
+				inputBox.show(200);
+			});
+
+			$(document).on('click', 'ul.chapters > li input[type="text"]', function(event) {
+				event.stopPropagation();
+			});
+
+			$(document).on('click', 'ul.chapters > li input.add-page', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				var button = $(this);
+				var pageTitle = button.siblings().get()[0].value.trim();
+				if(pageTitle != '') {
+					var contentList = button.parent().parent(); //li -> ul
+					contentList.append('<li>' + pageTitle + ' <span class="remove-content">&nbsp;&#8861;</span></li>');
+					button.parent().hide(500, function() {
+						button.parent().remove(); //li
+						contentList.append('<li><input type="text"><input type="button" class="add-page" value="Add Page"></li>');
+					});
+				}
+			});
+
+			/** Remove content from the page */
+			$(document).on('mouseenter', 'ul.chapters > li > ul > li', function(event) {
+				$(this).find("span.remove-content").show();
+			});
+
+			$(document).on('mouseleave', 'ul.chapters > li > ul > li', function(event) {
+				$(this).find("span.remove-content").hide();
+			});
+
+			$(document).on('click', 'ul.chapters > li > ul > li', function(event) {
+			  event.stopPropagation();
+			  event.preventDefault();
+			  var pageTitle = $(this).text();
+			  $('div#page-title > input#input-box-page-title').get()[0].value = pageTitle.trim().substring(0, pageTitle.length - 1).trim();
+			});
+
+			$(document).on('click', 'ul.chapters > li > ul > li span.remove-content', function(event){
+				event.stopPropagation();
+				$(this).parent().remove();
+			});
+
+			/** Add new chapter */
+			$(document).on('click', 'div.left-column div.chapter-adder span#add-chapter input[type=button]', function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				var inputBox = $(this).parent().siblings()[0];
+
+				if($(inputBox).is(':visible')){
+					var chapterName = inputBox.value.trim();
+					if(chapterName != '') {
+						$('ul.chapters').append('<li><span class="chapter-name">' +
+						chapterName +
+						'</span><span class="add-content">&nbsp;&#43;</span><ul></ul></li>');
+					}
+					addChapterInput($('ul.chapters li:last-child'));
+					$(this).parent().siblings().hide(500);
+					$(this).get()[0].value = 'Add Chapter';
+				}	else {
+					$(this).parent().siblings().show(500);
+					$(this).get()[0].value = "Confirm";
+				}
+			});
+
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+html, body {
+  margin:0px 0px;
+  font-family:ubuntu;
+  background-color: #fff2e6;
+}
+
+#page-title {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+#input-box-page-title {
+  width: 100%;
+  border-style: none;
+  font-size: 20px;
+  padding: 5px;
+}
+
+#input-box-page-title:focus {
+  border: 0px;
+  outline: none;
+}
+
+#editor-container {
+  height: 350px;
+}
+
+.left-column{
+  width: 20%;
+  height: 100vh;
+  float: left;
+  background-color: #ff6666;
+}
+
+.right-column {
+  overflow: hidden;
+  padding: 0em;
+}
+
+.right-column > div.writer {
+  margin: 1em;
+}
+
+div {
+  display: block;
+}
+
+span.book-name {
+  background-image: linear-gradient(0deg, #ff6666, #ff6699, #cc66ff);
+  display : block;
+  text-align: left;
+  padding: 5px;
+  color: #fff;
+  line-height: 50px;
+  font-size: 40px;
+  font-weight: bolder;
+}
+
+div.book-name-separater {
+  height: 15px;
+}
+
+.left-column ul.chapters {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  line-height: 40px;
+}
+
+div.chapter-adder {
+  padding: 5px;
+}
+
+.left-column ul.chapters > li {
+  padding: 0px;
+  font-weight: bolder;
+  background-color: #ff6666;
+  color: #fff;
+  border-bottom: 2px solid rgb(240, 240, 245, 0.1);
+}
+
+.left-column ul.chapters > li:hover {
+  background-image: linear-gradient(135deg, #ff6666, #ff6699);
+}
+
+.left-column ul.chapters > li > span.chapter-name {
+  display: inline-block;
+  padding-left: 5px;
+  margin: 0px;
+  height: 25px;
+}
+
+.left-column ul.chapters > li.open-chapter {
+  font-weight: bolder;
+  background-image: linear-gradient(150deg, #751aff, #ff6699);
+  color: #fff;
+}
+
+span.add-content {
+  height: 25px;
+  line-height: 25px;
+  font-size: 25px;
+  display: none;
+}
+
+span.add-content:hover {
+  cursor: pointer;
+}
+
+.left-column ul  > li > ul {
+  list-style-type: none;
+  font-weight: normal;
+  padding: 0px 0px 0px 15px;
+  display: none;
+}
+
+.left-column ul > li.open-chapter ul li {
+  font-weight: normal;
+  padding: 5px 10px 5px 0px;
+  color: #fff;
+  line-height: 20px;
+  border-bottom: 1px solid rgb(240, 240, 245, 0.1);
+}
+
+.left-column ul > li.open-chapter ul li input {
+  display: none;
+}
+
+.left-column ul > li.open-chapter ul li span.remove-content {
+  font-weight: bolder;
+  display: none;
+  cursor: pointer;
+}
+
+.left-column ul > li.open-chapter ul li input:focus {
+  outline: none;
+}
+
+div.chapter-adder span#add-chapter {
+  display: inline-block;
+  padding: 5px 0px;
+}
+
+div.chapter-adder #chapter-to-add {
+  display: none;
+}
+
+div.top-border-mask {
+  height: 10px;
+  display: block;
+  background-image: linear-gradient(135deg, #cc66ff, #ff6699, #ff6666);
+}
+
+div.ql-editor, div.ql-toolbar {
+  background-color: #fff;
+}
